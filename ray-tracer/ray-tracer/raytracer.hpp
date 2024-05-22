@@ -1,8 +1,9 @@
 #pragma once
 #include "scene.hpp"
 #include "canvas.hpp"
-#include <deque>
+#include <vector>
 #include <mutex>
+#include <thread>
 
 struct RenderJob {
 	int x;
@@ -16,14 +17,10 @@ public:
 
 	Raytracer(Scene* scene, Canvas* canvas);
 	void render();
-	void tick();
 
 private:
 	
 	Canvas* m_canvas;
-	std::mutex m_mutex;
-	std::thread** m_threads;
-	std::deque<RenderJob> m_jobs;
 	Scene* m_scene;
 
 };

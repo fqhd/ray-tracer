@@ -260,7 +260,6 @@ void Workbench::finish()
 	{
 		m_canvas.update();
 		set_texture(m_canvas.m_glTexture);
-		m_raytracer.tick();
 		refresh();
 	}
 }
