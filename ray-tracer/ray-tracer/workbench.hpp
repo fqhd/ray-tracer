@@ -1,8 +1,9 @@
 #pragma once
 #include "glad.h"
-#include "renderer.hpp"
 #include "canvas.hpp"
 #include "raytracer.hpp"
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>
 
 class GLCanvas : public Canvas {
 private:
@@ -15,13 +16,11 @@ public:
 	void bind();
 	void unbind();
 	void update();
-	void update(size_t line_offset, size_t line_count);
-	void update(size_t x, size_t y, size_t width, size_t height, uint8_t* buf);
 
-	friend class GLRenderer;
+	friend class Workbench;
 };
 
-class GLRenderer : public Renderer {
+class Workbench {
 private:
 	size_t m_width, m_height;
 	GLuint m_vertexbuffer, m_programID;
@@ -32,14 +31,12 @@ private:
 	void set_texture(GLuint texID);
 
 public:
-	GLRenderer(Scene* scene);
-	~GLRenderer();
+	Workbench(Scene* scene);
+	~Workbench();
 
 	void refresh();
 	void poll_events();
 	bool should_continue();
 
-	Canvas& canvas() override;
-
-	void finish() override;
+	void finish();
 };

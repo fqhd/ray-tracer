@@ -1,5 +1,4 @@
-#include "gl_renderer.hpp"
-#include "renderer.hpp"
+#include "workbench.hpp"
 #include <cstdlib>
 #include <vector>
 #include <string>
@@ -158,21 +157,7 @@ void GLCanvas::update() {
 	unbind();
 }
 
-void GLCanvas::update(size_t line_offset, size_t line_count) {
-	bind();
-	uint8_t* line_buf = m_buf.data() + line_offset * m_width * 3;
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, line_offset, m_width, line_count, GL_RGB, GL_UNSIGNED_BYTE, line_buf);
-	unbind();
-}
-
-void GLCanvas::update(size_t x, size_t y, size_t width, size_t height, uint8_t *buf)
-{
-	bind();
-	glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, width, height, GL_RGB, GL_UNSIGNED_BYTE, buf);
-	unbind();
-}
-
-GLRenderer::GLRenderer(Scene* scene)
+Workbench::Workbench(Scene* scene)
 	: m_width(Config::WIDTH), m_height(Config::HEIGHT), m_canvas(Config::WIDTH, Config::HEIGHT),
 	m_raytracer(scene, &m_canvas)
 {
@@ -224,19 +209,19 @@ GLRenderer::GLRenderer(Scene* scene)
 	m_canvas.init();
 }
 
-GLRenderer::~GLRenderer()
+Workbench::~Workbench()
 {
 	glfwTerminate();
 }
 
-void GLRenderer::set_texture(GLuint texID)
+void Workbench::set_texture(GLuint texID)
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texID);
 	glUniform1i(glGetUniformLocation(m_programID, "tex"), 0);
 }
 
-void GLRenderer::refresh()
+void Workbench::refresh()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	// 1st attribute buffer : vertices
@@ -257,22 +242,17 @@ void GLRenderer::refresh()
 	glfwPollEvents();
 }
 
-void GLRenderer::poll_events()
+void Workbench::poll_events()
 {
 	glfwPollEvents();
 }
 
-bool GLRenderer::should_continue()
+bool Workbench::should_continue()
 {
 	return !glfwWindowShouldClose(m_window) && glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS;
 }
 
-Canvas &GLRenderer::canvas()
-{
-	return m_canvas;
-}
-
-void GLRenderer::finish()
+void Workbench::finish()
 {
 	m_raytracer.render();
 
