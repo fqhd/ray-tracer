@@ -22,12 +22,11 @@ public:
 
 class Workbench {
 private:
-	size_t m_width, m_height;
 	GLuint m_vertexbuffer, m_programID;
 	GLFWwindow *m_window;
 	GLCanvas m_canvas;
-	Raytracer m_raytracer;
-	
+	Scene* m_scene;
+
 	void set_texture(GLuint texID);
 
 public:

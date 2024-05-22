@@ -5,22 +5,4 @@
 #include <mutex>
 #include <thread>
 
-struct RenderJob {
-	int x;
-	int y;
-	int width;
-	int height;
-};
-
-class Raytracer {
-public:
-
-	Raytracer(Scene* scene, Canvas* canvas);
-	void render();
-
-private:
-	
-	Canvas* m_canvas;
-	Scene* m_scene;
-
-};
+void render(Scene* scene, Canvas* canvas);

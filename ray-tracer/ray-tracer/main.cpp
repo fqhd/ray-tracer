@@ -19,7 +19,7 @@ int main()
 		}
 		else if (userinput == "2") {
 			Photorealistic photorealistic;
-			photorealistic.finish();
+			photorealistic.finish(&scene);
 			return 0;
 		}
 		else {

@@ -139,7 +139,7 @@ void GLCanvas::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_width, m_height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Config::WIDTH, Config::HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 	unbind();
 }
 
@@ -153,21 +153,21 @@ void GLCanvas::unbind() {
 
 void GLCanvas::update() {
 	bind();
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_width, m_height, GL_RGB, GL_UNSIGNED_BYTE, m_buf.data());
+	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, Config::WIDTH, Config::HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, m_buf.data());
 	unbind();
 }
 
 Workbench::Workbench(Scene* scene)
-	: m_width(Config::WIDTH), m_height(Config::HEIGHT), m_canvas(Config::WIDTH, Config::HEIGHT),
-	m_raytracer(scene, &m_canvas)
+	: m_canvas(Config::WIDTH, Config::HEIGHT)
 {
+	m_scene = scene;
 	if (glfwInit() == GLFW_FALSE)
 	{
 		exit(1);
 	}
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-	m_window = glfwCreateWindow(m_width, m_height, "ray-tracer", nullptr, nullptr);
+	m_window = glfwCreateWindow(Config::WIDTH, Config::HEIGHT, "ray-tracer", nullptr, nullptr);
 	if (m_window == nullptr)
 	{
 		glfwTerminate();
@@ -179,7 +179,7 @@ Workbench::Workbench(Scene* scene)
 
 
 	gladLoadGL();
-	glViewport(0, 0, m_width, m_height);
+	glViewport(0, 0, Config::WIDTH, Config::HEIGHT);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -254,7 +254,7 @@ bool Workbench::should_continue()
 
 void Workbench::finish()
 {
-	m_raytracer.render();
+	render(m_scene, &m_canvas);
 
 	while(should_continue())
 	{

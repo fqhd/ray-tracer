@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "canvas.hpp"
+#include "raytracer.hpp"
 
 class Photorealistic {
 private:
@@ -11,7 +12,7 @@ public:
 	Photorealistic();
 	~Photorealistic();
 
-	Canvas& canvas();
-	void finish();
+	void finish(Scene* scene);
+
 
 };

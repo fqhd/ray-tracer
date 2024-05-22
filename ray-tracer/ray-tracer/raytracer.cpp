@@ -1,11 +1,6 @@
 #include "raytracer.hpp"
 #include "time.hpp"
 
-Raytracer::Raytracer(Scene* scene, Canvas* canvas) {
-	m_scene = scene;
-	m_canvas = canvas;
-}
-
 vec3 ray_col(const ray &r, int depth, const hittable_list* world)
 {
 	if (depth >= Config::MAX_DEPTH) return vec3();
@@ -23,6 +18,13 @@ vec3 ray_col(const ray &r, int depth, const hittable_list* world)
 	return col;
 	return vec3();
 }
+
+struct RenderJob {
+	int x;
+	int y;
+	int width;
+	int height;
+};
 
 void worker_routine(Scene* scene, Canvas* canvas, std::vector<RenderJob>* jobs, std::mutex* mutex) {
 	RenderJob job;
@@ -66,7 +68,7 @@ void worker_routine(Scene* scene, Canvas* canvas, std::vector<RenderJob>* jobs, 
 	}
 }
 
-void Raytracer::render() {
+void render(Scene* scene, Canvas* canvas) {
 	std::mutex mutex;
 	std::thread** threads = new std::thread * [Config::THREADS];
 	std::vector<RenderJob> jobs;
@@ -80,7 +82,7 @@ void Raytracer::render() {
 	}
 
 	for (int i = 0; i < Config::THREADS; i++) {
-		threads[i] = new std::thread(worker_routine, m_scene, m_canvas, &jobs, &mutex);
+		threads[i] = new std::thread(worker_routine, scene, canvas, &jobs, &mutex);
 	}
 	for (int i = 0; i < Config::THREADS; i++) {
 		threads[i]->join();

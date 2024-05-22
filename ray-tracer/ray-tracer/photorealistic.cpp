@@ -13,10 +13,6 @@ Photorealistic::~Photorealistic() {
 
 }
 
-Canvas& Photorealistic::canvas() {
-	return m_canvas;
-}
-
-void Photorealistic::finish() {
+void Photorealistic::finish(Scene* scene) {
 	stbi_write_jpg("output.jpg", Config::WIDTH, Config::HEIGHT, 3, m_canvas.getData(), 90);
 }
