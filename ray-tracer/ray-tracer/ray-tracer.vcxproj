@@ -145,13 +145,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="material.cpp" />
     <ClCompile Include="png_renderer.cpp" />
-    <ClCompile Include="quad.cpp" />
     <ClCompile Include="rand.cpp" />
     <ClCompile Include="ray.cpp" />
     <ClCompile Include="raytracer.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="sphere.cpp" />
-    <ClCompile Include="subscription.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="time.cpp" />
     <ClCompile Include="vec.cpp" />
@@ -162,14 +160,12 @@
     <ClInclude Include="bvh.hpp" />
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="canvas.hpp" />
-    <ClInclude Include="channel.hpp" />
     <ClInclude Include="config.hpp" />
     <ClInclude Include="glad.h" />
     <ClInclude Include="gl_renderer.hpp" />
     <ClInclude Include="hittable.hpp" />
     <ClInclude Include="hittable_list.hpp" />
     <ClInclude Include="interval.hpp" />
-    <ClInclude Include="job_manager.hpp" />
     <ClInclude Include="khrplatform.h" />
     <ClInclude Include="material.hpp" />
     <ClInclude Include="png_renderer.hpp" />
@@ -181,7 +177,6 @@
     <ClInclude Include="scene.hpp" />
     <ClInclude Include="sphere.hpp" />
     <ClInclude Include="stb_image.h" />
-    <ClInclude Include="subscription.hpp" />
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="time.hpp" />
     <ClInclude Include="vec.hpp" />

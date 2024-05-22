@@ -6,7 +6,6 @@
 #include <memory>
 #include "rand.hpp"
 
-
 Application::Application() {
 	m_renderer = std::make_unique<GLRenderer>(&m_scene);
 }

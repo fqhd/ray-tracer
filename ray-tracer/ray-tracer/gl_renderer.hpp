@@ -39,8 +39,6 @@ public:
 	void poll_events();
 	bool should_continue();
 
-	void add_subscription(RendererSubscription& subscription) override;
-
 	Canvas& canvas() override;
 
 	void finish() override;

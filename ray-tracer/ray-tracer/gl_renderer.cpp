@@ -267,19 +267,6 @@ bool GLRenderer::should_continue()
 	return !glfwWindowShouldClose(m_window) && glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS;
 }
 
-void GLRenderer::add_subscription(RendererSubscription & subscription)
-{
-	subscription.tick += [this]() {
-		if(should_continue()) {
-			m_canvas.update();
-			set_texture(m_canvas.m_glTexture);
-			refresh();
-		} else {
-			exit(0);
-		}
-	};
-}
-
 Canvas &GLRenderer::canvas()
 {
 	return m_canvas;

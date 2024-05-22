@@ -48,9 +48,6 @@
     <ClCompile Include="png_renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="quad.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="rand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -64,9 +61,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sphere.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="subscription.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="texture.cpp">
@@ -98,9 +92,6 @@
     <ClInclude Include="canvas.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="channel.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="config.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -114,9 +105,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="interval.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="job_manager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="material.hpp">
@@ -147,9 +135,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="subscription.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="texture.hpp">
