@@ -1,7 +1,7 @@
 #ifndef RENDERER_HPP_
 #define RENDERER_HPP_
 
-#include <glad.h>
+#include "glad.h"
 #include <GLFW/glfw3.h>
 #include "canvas.hpp"
 #include "subscription.hpp"

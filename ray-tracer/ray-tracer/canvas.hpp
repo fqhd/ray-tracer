@@ -6,7 +6,7 @@
 #include <vector>
 #include <stddef.h>
 
-#include <glad.h>
+#include "glad.h"
 
 class Canvas {
 protected:

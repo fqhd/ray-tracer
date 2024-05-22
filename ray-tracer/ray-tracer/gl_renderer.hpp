@@ -1,5 +1,5 @@
 #pragma once
-#include <glad.h>
+#include "glad.h"
 #include "renderer.hpp"
 #include "canvas.hpp"
 #include "raytracer.hpp"
