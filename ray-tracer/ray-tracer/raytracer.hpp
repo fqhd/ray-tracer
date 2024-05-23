@@ -6,3 +6,4 @@
 #include <thread>
 
 void render(Scene* scene, Canvas* canvas);
+void render_albedo(Scene* scene, Canvas* canvas);

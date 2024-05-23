@@ -167,7 +167,7 @@ Workbench::Workbench(Scene* scene)
 	}
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-	m_window = glfwCreateWindow(Config::WIDTH, Config::HEIGHT, "ray-tracer", nullptr, nullptr);
+	m_window = glfwCreateWindow(1920, 1080, "ray-tracer", nullptr, nullptr);
 	if (m_window == nullptr)
 	{
 		glfwTerminate();
@@ -179,7 +179,7 @@ Workbench::Workbench(Scene* scene)
 
 
 	gladLoadGL();
-	glViewport(0, 0, Config::WIDTH, Config::HEIGHT);
+	glViewport(0, 0, 1920, 1080);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -196,15 +196,15 @@ Workbench::Workbench(Scene* scene)
 	m_programID = LoadShaders("shaders/vertex.glsl", "shaders/fragment.glsl");
 	glUseProgram(m_programID);
 
-	glfwSetMouseButtonCallback(m_window, [](GLFWwindow *window, int button, int action, int mods) {
-		(void) mods;
-		if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-		{
-			double x, y;
-			glfwGetCursorPos(window, &x, &y);
-			std::cout << "Mouse clicked at " << x << ", " << y << std::endl;
-		}
-	});
+	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	if (glfwRawMouseMotionSupported())
+		glfwSetInputMode(m_window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+	glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwGetCursorPos(m_window, &m_currX, &m_currY);
+	m_prevX = m_currX;
+	m_prevY = m_currY;
+	m_targetDirection = scene->camera.direction;
+	m_targetOrigin = scene->camera.origin;
 
 	m_canvas.init();
 }
@@ -254,12 +254,79 @@ bool Workbench::should_continue()
 
 void Workbench::finish()
 {
-	render(m_scene, &m_canvas);
-
+	double lastTime = glfwGetTime();
 	while(should_continue())
 	{
+		double dt = glfwGetTime() - lastTime;
+		lastTime = glfwGetTime();
+		handleMouseInput();
+		handleKeyboardInput(dt);
+		updateCinematicCamera(dt);
+		render_albedo(m_scene, &m_canvas);
 		m_canvas.update();
 		set_texture(m_canvas.m_glTexture);
 		refresh();
 	}
+}
+
+void Workbench::handleKeyboardInput(double dt) {
+	double speed = 8.0;
+	vec3 forward(m_scene->camera.direction.x(), m_scene->camera.direction.y(), 0.0);
+	vec3 right = cross(forward, vec3(0, 0, 1));
+	forward = forward.normalize();
+	if (glfwGetKey(m_window, GLFW_KEY_W) == GLFW_PRESS) {
+		m_targetOrigin += forward * speed * dt;
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_A) == GLFW_PRESS) {
+		m_targetOrigin -= right * speed * dt;
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_S) == GLFW_PRESS) {
+		m_targetOrigin -= forward * speed * dt;
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_D) == GLFW_PRESS) {
+		m_targetOrigin += right * speed * dt;
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+		m_targetOrigin[2] -= speed * dt;
+	}
+	if (glfwGetKey(m_window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		m_targetOrigin[2] += speed * dt;
+	}
+
+}
+
+double toRad(double degrees) {
+	return degrees * (3.1415926535897932385 / 180.0);
+}
+
+void Workbench::handleMouseInput() {
+	m_prevX = m_currX;
+	m_prevY = m_currY;
+	glfwGetCursorPos(m_window, &m_currX, &m_currY);
+	double deltaX = m_currX - m_prevX;
+	double deltaY = m_currY - m_prevY;
+	static double pitch = 0;
+	static double yaw = 90;
+	pitch -= deltaY * 0.3;
+	yaw -= deltaX * 0.3;
+	if (pitch < -89) {
+		pitch = -89;
+	}
+	if (pitch > 89) {
+		pitch = 89;
+	}
+	vec3 direction;
+	
+	direction[0] = cos(toRad(yaw)) * cos(toRad(pitch));
+	direction[2] = sin(toRad(pitch));
+	direction[1] = sin(toRad(yaw)) * cos(toRad(pitch));
+
+	m_targetDirection = direction;
+}
+
+void Workbench::updateCinematicCamera(double dt) {
+	double cinematicSpeed = 10.0;
+	m_scene->camera.origin += (m_targetOrigin - m_scene->camera.origin) * cinematicSpeed * dt;
+	m_scene->camera.direction += (m_targetDirection - m_scene->camera.direction) * cinematicSpeed * dt;
+	m_scene->camera.direction = m_scene->camera.direction.normalize();
 }

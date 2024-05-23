@@ -2,9 +2,9 @@
 #include <thread>
 
 namespace Config {
-	const int WIDTH = 1920;
-	const int HEIGHT = 1080;
-	const int RAYS_PER_PIXEL = 20;
+	const int WIDTH = 640;
+	const int HEIGHT = 360;
+	const int RAYS_PER_PIXEL = 256;
 	const int MAX_DEPTH = 50;
 	//const int THREADS = std::thread::hardware_concurrency();
 	const int THREADS = 12;

@@ -28,6 +28,9 @@ private:
 	Scene* m_scene;
 
 	void set_texture(GLuint texID);
+	void handleKeyboardInput(double dt);
+	void handleMouseInput();
+	void updateCinematicCamera(double dt);
 
 public:
 	Workbench(Scene* scene);
@@ -36,6 +39,9 @@ public:
 	void refresh();
 	void poll_events();
 	bool should_continue();
+	double m_currX, m_currY, m_prevX, m_prevY;
+	vec3 m_targetDirection;
+	vec3 m_targetOrigin;
 
 	void finish();
 };

@@ -5,7 +5,7 @@
 Scene::Scene()
 : camera(
 	 vec3(13, 3, 2),
-	 -vec3(13, 3, 2),
+	 vec3(0, 1, 0),
 	 65.0f,
 	 Config::WIDTH / (float)Config::HEIGHT
 	)

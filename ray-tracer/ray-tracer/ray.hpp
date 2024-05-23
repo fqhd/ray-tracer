@@ -1,7 +1,6 @@
 #ifndef RAY_HPP_
 #define RAY_HPP_
 
-#include "ray.hpp"
 #include "vec.hpp"
 
 class ray {
