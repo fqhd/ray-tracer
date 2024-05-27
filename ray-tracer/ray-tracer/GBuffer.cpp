@@ -15,7 +15,7 @@ void GBuffer::setPixel(const Pixel& pixel, int x, int y) {
 }
 
 void GBuffer::save(const std::string& path) {
-    std::ofstream outFile("output.bin", std::ios::out | std::ios::binary);
+    std::ofstream outFile(path.c_str(), std::ios::out | std::ios::binary);
 
     // Check if the file was successfully opened
     if (!outFile) {

@@ -206,6 +206,11 @@ Workbench::Workbench(Scene* scene)
 	m_targetDirection = scene->camera.direction;
 	m_targetOrigin = scene->camera.origin;
 
+	m_camOutFile.open("camera.txt");
+	if (!m_camOutFile) {
+		std::cerr << "Failed to open camera.txt file for recording" << std::endl;
+	}
+
 	m_canvas.init();
 }
 
@@ -264,10 +269,18 @@ void Workbench::copyGBufferIntoCanvas() {
 	}
 }
 
+void Workbench::recordCameraPosition() {
+	Camera c = m_scene->camera;
+
+	m_camOutFile << c.origin.x() << " " << c.origin.y() << " " << c.origin.z() << " ";
+	m_camOutFile << c.direction.x() << " " << c.direction.y() << " " << c.direction.z() << std::endl;
+}
+
 void Workbench::finish()
 {
 	while(should_continue())
 	{
+		recordCameraPosition();
 		double dt = 1/60.0;
 		handleMouseInput();
 		handleKeyboardInput(dt);
@@ -278,6 +291,7 @@ void Workbench::finish()
 		set_texture(m_canvas.m_glTexture);
 		refresh();
 	}
+	m_camOutFile.close();
 }
 
 void Workbench::handleKeyboardInput(double dt) {

@@ -4,6 +4,7 @@
 #include "raytracer.hpp"
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
+#include <fstream>
 
 class GLCanvas : public Canvas {
 private:
@@ -27,12 +28,14 @@ private:
 	GLCanvas m_canvas;
 	GBuffer m_gbuffer;
 	Scene* m_scene;
+	std::ofstream m_camOutFile;
 
 	void set_texture(GLuint texID);
 	void handleKeyboardInput(double dt);
 	void handleMouseInput();
 	void updateCinematicCamera(double dt);
 	void copyGBufferIntoCanvas();
+	void recordCameraPosition();
 
 public:
 	Workbench(Scene* scene);
