@@ -280,12 +280,16 @@ void Workbench::finish()
 {
 	while(should_continue())
 	{
-		recordCameraPosition();
 		double dt = 1/60.0;
 		handleMouseInput();
 		handleKeyboardInput(dt);
 		updateCinematicCamera(dt);
 		render_gbuffer(m_scene, &m_gbuffer);
+		if ((m_frame % Config::SAVE_INTERVAL) == 0) {
+			recordCameraPosition();
+			m_gbuffer.save("gbuffer/frame_" + std::to_string(m_frame) + ".npy");
+		}
+		m_frame++;
 		copyGBufferIntoCanvas();
 		m_canvas.update();
 		set_texture(m_canvas.m_glTexture);

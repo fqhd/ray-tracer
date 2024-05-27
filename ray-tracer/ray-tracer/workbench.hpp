@@ -29,6 +29,7 @@ private:
 	GBuffer m_gbuffer;
 	Scene* m_scene;
 	std::ofstream m_camOutFile;
+	int m_frame = 0;
 
 	void set_texture(GLuint texID);
 	void handleKeyboardInput(double dt);

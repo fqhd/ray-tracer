@@ -9,4 +9,5 @@ namespace Config {
 	//const int THREADS = std::thread::hardware_concurrency();
 	const int THREADS = 12;
 	const int PATCH_SIZE = 128;
+	const int SAVE_INTERVAL = 100;
 }
