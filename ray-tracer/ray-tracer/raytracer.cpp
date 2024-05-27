@@ -56,7 +56,7 @@ struct RenderJob {
 	int height;
 };
 
-void render_worker(Scene* scene, Canvas* canvas, std::vector<RenderJob>* jobs, std::mutex* mutex) {
+void render_worker(Scene* scene, Canvas* canvas, std::vector<RenderJob>* jobs, std::mutex* mutex, int nsamples) {
 	RenderJob job;
 
 	while (true) {
@@ -68,7 +68,6 @@ void render_worker(Scene* scene, Canvas* canvas, std::vector<RenderJob>* jobs, s
 		}
 		else {
 			// If there are no more jobs to be done just leave
-			std::cout << "Finished rendering" << std::endl;
 			mutex->unlock();
 			return;
 		}
@@ -83,7 +82,7 @@ void render_worker(Scene* scene, Canvas* canvas, std::vector<RenderJob>* jobs, s
 				double u = (double)x / (double)Config::WIDTH * 2.0 - 1.0;
 				double v = (double)y / (double)Config::HEIGHT * 2.0 - 1.0;
 				vec3 col;
-				for (int i = 0; i < Config::RAYS_PER_PIXEL; i++) {
+				for (int i = 0; i < nsamples; i++) {
 					double dx = (random_double() - 0.5);
 					double dy = (random_double() - 0.5);
 					double du = dx * dX;
@@ -91,7 +90,7 @@ void render_worker(Scene* scene, Canvas* canvas, std::vector<RenderJob>* jobs, s
 					ray r = scene->camera.get_ray(u + du, v + dv);
 					col += ray_col(r, 0, &scene->world);
 				}
-				col /= Config::RAYS_PER_PIXEL;
+				col /= nsamples;
 				canvas->setPixel(x, y, col);
 			}
 		}
@@ -127,7 +126,7 @@ void gbuffer_worker(Scene* scene, GBuffer* gbuffer, std::vector<RenderJob>* jobs
 	}
 }
 
-void render(Scene* scene, Canvas* canvas) {
+void render(Scene* scene, Canvas* canvas, int nsamples) {
 	std::mutex mutex;
 	std::thread** threads = new std::thread * [Config::THREADS];
 	std::vector<RenderJob> jobs;
@@ -141,7 +140,7 @@ void render(Scene* scene, Canvas* canvas) {
 	}
 
 	for (int i = 0; i < Config::THREADS; i++) {
-		threads[i] = new std::thread(render_worker, scene, canvas, &jobs, &mutex);
+		threads[i] = new std::thread(render_worker, scene, canvas, &jobs, &mutex, nsamples);
 	}
 	for (int i = 0; i < Config::THREADS; i++) {
 		threads[i]->join();

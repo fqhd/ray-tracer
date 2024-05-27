@@ -6,5 +6,5 @@
 #include <mutex>
 #include <thread>
 
-void render(Scene* scene, Canvas* canvas);
+void render(Scene* scene, Canvas* canvas, int nsamples);
 void render_gbuffer(Scene* scene, GBuffer* canvas);

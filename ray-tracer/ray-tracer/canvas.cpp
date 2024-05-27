@@ -1,9 +1,13 @@
 #include "canvas.hpp"
 #include <cmath>
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
+#include "config.hpp"
 
 Canvas::Canvas(size_t width, size_t height)
 	: m_width(width), m_height(height), m_buf(width * height * 3)
 {
+	stbi_flip_vertically_on_write(true);
 }
 
 size_t Canvas::width() const {
@@ -31,4 +35,8 @@ void Canvas::setPixel(size_t x, size_t y, float r, float g, float b) {
 
 void Canvas::setPixel(size_t x, size_t y, vec3 col) {
 	setPixel(x, y, col.x(), col.y(), col.z());
+}
+
+void Canvas::save(const std::string& path) const {
+	stbi_write_png(path.c_str(), m_width, m_height, 3, m_buf.data(), m_width * 3);
 }

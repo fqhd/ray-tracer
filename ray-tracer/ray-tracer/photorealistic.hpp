@@ -6,6 +6,7 @@
 class Photorealistic {
 private:
 	Canvas m_canvas;
+	int m_frame = 0;
 
 public:
 

@@ -21,6 +21,7 @@ public:
 	size_t width() const;
 	size_t height() const;
 
+	void save(const std::string& path) const;
 	uint8_t* getData() const;
 	const uint8_t& operator[](size_t i) const;
 	void setPixel(size_t x, size_t y, float r, float g, float b);
