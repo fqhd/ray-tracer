@@ -24,9 +24,9 @@ const uint8_t& Canvas::operator[](size_t i) const {
 
 void Canvas::setPixel(size_t x, size_t y, float r, float g, float b) {
 	int idx = (x + y * m_width) * 3;
-	m_buf[idx] = (uint8_t)(std::sqrt(r) * 255);
-	m_buf[idx + 1] = (uint8_t)(std::sqrt(g) * 255);
-	m_buf[idx + 2] = (uint8_t)(std::sqrt(b) * 255);
+	m_buf[idx] = (uint8_t)(r * 255);
+	m_buf[idx + 1] = (uint8_t)(g * 255);
+	m_buf[idx + 2] = (uint8_t)(b * 255);
 }
 
 void Canvas::setPixel(size_t x, size_t y, vec3 col) {

@@ -252,17 +252,28 @@ bool Workbench::should_continue()
 	return !glfwWindowShouldClose(m_window) && glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS;
 }
 
+void Workbench::copyGBufferIntoCanvas() {
+	for (int i = 0; i < Config::HEIGHT; i++) {
+		for (int j = 0; j < Config::WIDTH; j++) {
+			vec3 col;
+			col[0] = m_gbuffer.getPixel(i, j).r;
+			col[1] = m_gbuffer.getPixel(i, j).g;
+			col[2] = m_gbuffer.getPixel(i, j).b;
+			m_canvas.setPixel(j, i, col);
+		}
+	}
+}
+
 void Workbench::finish()
 {
-	double lastTime = glfwGetTime();
 	while(should_continue())
 	{
-		double dt = glfwGetTime() - lastTime;
-		lastTime = glfwGetTime();
+		double dt = 1/60.0;
 		handleMouseInput();
 		handleKeyboardInput(dt);
 		updateCinematicCamera(dt);
-		render_albedo(m_scene, &m_canvas);
+		render_gbuffer(m_scene, &m_gbuffer);
+		copyGBufferIntoCanvas();
 		m_canvas.update();
 		set_texture(m_canvas.m_glTexture);
 		refresh();

@@ -1,6 +1,6 @@
 #include "photorealistic.hpp"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image.h"
+#include "stb_image_write.h"
 #include "config.hpp"
 
 Photorealistic::Photorealistic():
@@ -14,5 +14,6 @@ Photorealistic::~Photorealistic() {
 }
 
 void Photorealistic::finish(Scene* scene) {
+	// Do not use jpg, write everything in png
 	stbi_write_jpg("output.jpg", Config::WIDTH, Config::HEIGHT, 3, m_canvas.getData(), 90);
 }

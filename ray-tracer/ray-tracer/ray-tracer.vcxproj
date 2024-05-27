@@ -137,6 +137,7 @@
     <ClCompile Include="bvh.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="canvas.cpp" />
+    <ClCompile Include="GBuffer.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="workbench.cpp" />
     <ClCompile Include="hittable_list.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="canvas.hpp" />
     <ClInclude Include="config.hpp" />
+    <ClInclude Include="GBuffer.hpp" />
     <ClInclude Include="glad.h" />
     <ClInclude Include="workbench.hpp" />
     <ClInclude Include="hittable.hpp" />
@@ -173,7 +175,7 @@
     <ClInclude Include="raytracer.hpp" />
     <ClInclude Include="scene.hpp" />
     <ClInclude Include="sphere.hpp" />
-    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="stb_image_write.h" />
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="time.hpp" />
     <ClInclude Include="vec.hpp" />

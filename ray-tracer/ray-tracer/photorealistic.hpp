@@ -14,5 +14,4 @@ public:
 
 	void finish(Scene* scene);
 
-
 };

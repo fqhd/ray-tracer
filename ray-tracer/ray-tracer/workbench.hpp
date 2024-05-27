@@ -25,12 +25,14 @@ private:
 	GLuint m_vertexbuffer, m_programID;
 	GLFWwindow *m_window;
 	GLCanvas m_canvas;
+	GBuffer m_gbuffer;
 	Scene* m_scene;
 
 	void set_texture(GLuint texID);
 	void handleKeyboardInput(double dt);
 	void handleMouseInput();
 	void updateCinematicCamera(double dt);
+	void copyGBufferIntoCanvas();
 
 public:
 	Workbench(Scene* scene);

@@ -19,20 +19,34 @@ vec3 ray_col(const ray& r, int depth, const hittable_list* world)
 	return vec3();
 }
 
-vec3 ray_col_albedo(const ray& r, int depth, const hittable_list* world)
+Pixel ray_data(const ray& r, const hittable_list* world)
 {
-	if (depth >= Config::MAX_DEPTH) return vec3();
 	hit_record rec;
 	if (world->hit(r, interval(0.00001, INFINITY), rec)) {
 		ray scattered;
 		vec3 attenuation;
 		rec.mat_ptr->scatter(r, rec, attenuation, scattered);
-		return attenuation;
+		Pixel p;
+		p.r = attenuation[0];
+		p.g = attenuation[1];
+		p.b = attenuation[2];
+		p.nx = rec.normal.x();
+		p.ny = rec.normal.y();
+		p.nz = rec.normal.z();
+		p.x = rec.p.x();
+		p.y = rec.p.y();
+		p.z = rec.p.z();
+		p.depth = rec.t;
+		return p;
 	}
 	double height = r.direction().z();
 	height = (height + 1.0) / 2.0;
 	vec3 col = vec3(1.0, 1.0, 1.0) * (1 - height) + vec3(0.5, 0.7, 1.0) * height;
-	return col;
+	Pixel p;
+	p.r = col[0];
+	p.g = col[1];
+	p.b = col[2];
+	return p;
 }
 
 struct RenderJob {
@@ -42,7 +56,7 @@ struct RenderJob {
 	int height;
 };
 
-void worker_routine(Scene* scene, Canvas* canvas, std::vector<RenderJob>* jobs, std::mutex* mutex) {
+void render_worker(Scene* scene, Canvas* canvas, std::vector<RenderJob>* jobs, std::mutex* mutex) {
 	RenderJob job;
 
 	while (true) {
@@ -84,7 +98,7 @@ void worker_routine(Scene* scene, Canvas* canvas, std::vector<RenderJob>* jobs, 
 	}
 }
 
-void albedo_worker_routine(Scene* scene, Canvas* canvas, std::vector<RenderJob>* jobs, std::mutex* mutex) {
+void gbuffer_worker(Scene* scene, GBuffer* gbuffer, std::vector<RenderJob>* jobs, std::mutex* mutex) {
 	RenderJob job;
 
 	while (true) {
@@ -105,10 +119,9 @@ void albedo_worker_routine(Scene* scene, Canvas* canvas, std::vector<RenderJob>*
 			for (int x = job.x; x < job.x + job.width; x++) {
 				double u = (double)x / (double)Config::WIDTH * 2.0 - 1.0;
 				double v = (double)y / (double)Config::HEIGHT * 2.0 - 1.0;
-				vec3 col;
 				ray r = scene->camera.get_ray(u, v);
-				col += ray_col_albedo(r, 0, &scene->world);
-				canvas->setPixel(x, y, col);
+				Pixel p = ray_data(r, &scene->world);
+				gbuffer->setPixel(p, x, y);
 			}
 		}
 	}
@@ -128,7 +141,7 @@ void render(Scene* scene, Canvas* canvas) {
 	}
 
 	for (int i = 0; i < Config::THREADS; i++) {
-		threads[i] = new std::thread(worker_routine, scene, canvas, &jobs, &mutex);
+		threads[i] = new std::thread(render_worker, scene, canvas, &jobs, &mutex);
 	}
 	for (int i = 0; i < Config::THREADS; i++) {
 		threads[i]->join();
@@ -139,7 +152,7 @@ void render(Scene* scene, Canvas* canvas) {
 	delete[] threads;
 }
 
-void render_albedo(Scene* scene, Canvas* canvas) {
+void render_gbuffer(Scene* scene, GBuffer* canvas) {
 	std::mutex mutex;
 	std::thread** threads = new std::thread * [Config::THREADS];
 	std::vector<RenderJob> jobs;
@@ -153,7 +166,7 @@ void render_albedo(Scene* scene, Canvas* canvas) {
 	}
 
 	for (int i = 0; i < Config::THREADS; i++) {
-		threads[i] = new std::thread(albedo_worker_routine, scene, canvas, &jobs, &mutex);
+		threads[i] = new std::thread(gbuffer_worker, scene, canvas, &jobs, &mutex);
 	}
 	for (int i = 0; i < Config::THREADS; i++) {
 		threads[i]->join();
